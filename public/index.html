@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HQ Time</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 640px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+    p { margin: 0.5rem 0; }
+    button { padding: 0.5rem 1rem; }
+  </style>
+</head>
+<body>
+  <h1>HQ Server Time</h1>
+  <p><strong id="iso">--</strong></p>
+  <p><strong id="unix">--</strong></p>
+  <p><strong id="utc">--</strong></p>
+  <button id="refresh">Refresh</button>
+  <script>
+    async function load() {
+      const res = await fetch("/.netlify/functions/time");
+      const data = await res.json();
+      document.getElementById("iso").textContent = "ISO: " + data.iso;
+      document.getElementById("unix").textContent = "Unix: " + data.unix;
+      document.getElementById("utc").textContent = "UTC: " + data.utc;
+    }
+    document.getElementById("refresh").addEventListener("click", load);
+    load();
+  </script>
+</body>
+</html>
