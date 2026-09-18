@@ -1,10 +1,13 @@
 {
-  "name": "hq-desktop",
+  "name": "hq-factory",
   "version": "1.0.0",
-  "description": "Local Electron client for the HQ Netlify time service",
+  "description": "HQ Factory — create and deploy public Netlify servers from a local desktop app",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
+  },
+  "dependencies": {
+    "netlify-cli": "^17.36.0"
   },
   "devDependencies": {
     "electron": "^31.0.0"

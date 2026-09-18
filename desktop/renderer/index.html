@@ -2,41 +2,84 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
-  <title>HQ Time Client</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      margin: 2rem;
-      background: #16171a;
-      color: #e6e6e6;
-    }
-    h1 { font-size: 1.25rem; margin-bottom: 1rem; }
-    .row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #2a2b2f; font-size: 0.9rem; }
-    .row span:first-child { color: #9a9aa0; }
-    #status { margin-top: 1rem; font-size: 0.85rem; min-height: 1.2em; }
-    .error { color: #ff6b6b; }
-    .ok { color: #51cf66; }
-    button {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 6px;
-      background: #4c6ef5;
-      color: #fff;
-      font-size: 0.9rem;
-      cursor: pointer;
-    }
-    button:disabled { opacity: 0.5; cursor: default; }
-  </style>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HQ Factory</title>
+  <link rel="stylesheet" href="app.css" />
 </head>
 <body>
-  <h1>HQ Time Client</h1>
-  <div class="row"><span>ISO</span><span id="iso">--</span></div>
-  <div class="row"><span>Unix</span><span id="unix">--</span></div>
-  <div class="row"><span>UTC</span><span id="utc">--</span></div>
-  <button id="refresh">Fetch server time</button>
-  <p id="status"></p>
+  <header>
+    <h1>HQ Factory</h1>
+    <span class="tagline">create public servers on Netlify in seconds</span>
+  </header>
+
+  <nav>
+    <button class="tab active" data-tab="routes">Routes</button>
+    <button class="tab" data-tab="preview">Preview</button>
+    <button class="tab" data-tab="publish">Publish</button>
+    <button class="tab" data-tab="monitor">Monitor</button>
+  </nav>
+
+  <main>
+    <section id="tab-routes" class="panel active">
+      <div class="toolbar">
+        <label for="hqfile"><strong>hqfile.js</strong> — define your routes</label>
+        <button id="save">Save</button>
+      </div>
+      <textarea id="hqfile" spellcheck="false"></textarea>
+      <p class="hint">Handlers receive <code>ctx</code> (query, body, iso, unix, utc, ...). Paths are exact; use <code>ctx.query</code> for dynamic input.</p>
+    </section>
+
+    <section id="tab-preview" class="panel">
+      <div class="toolbar">
+        <button id="preview-start">Start preview</button>
+        <button id="preview-stop">Stop</button>
+        <span id="preview-status" class="idle">stopped</span>
+      </div>
+      <div id="routes-list" class="routes"></div>
+      <div class="toolbar">
+        <label>Path <input id="req-path" value="/time" placeholder="/time" /></label>
+        <label>Method
+          <select id="req-method">
+            <option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option>
+          </select>
+        </label>
+        <button id="preview-call">Call</button>
+      </div>
+      <details>
+        <summary>Request body (JSON)</summary>
+        <textarea id="req-body" rows="3"></textarea>
+      </details>
+      <pre id="preview-output" class="output">—</pre>
+      <pre id="preview-log" class="log"></pre>
+    </section>
+
+    <section id="tab-publish" class="panel">
+      <div class="toolbar">
+        <label>Netlify auth token <input id="netlify-token" type="password" placeholder="ntf_..." /></label>
+        <label>Site ID (optional) <input id="site-id" placeholder="leave empty for a new site" /></label>
+      </div>
+      <div class="toolbar">
+        <label>Output directory <input id="out-dir" value="~/Desktop/hq-servers/&lt;name&gt;" placeholder="/tmp/my-server" /></label>
+        <button id="export">Export only</button>
+        <button id="deploy">Export &amp; Deploy</button>
+      </div>
+      <div class="toolbar">
+        <label>Server name <input id="server-name" value="my-public-server" /></label>
+      </div>
+      <pre id="deploy-log" class="output tall">—</pre>
+      <p class="hint">Token: Netlify dashboard → User settings → Applications → Personal access tokens (scope: everything).</p>
+    </section>
+
+    <section id="tab-monitor" class="panel">
+      <div class="toolbar">
+        <label>Server URL <input id="monitor-url" placeholder="https://your-site.netlify.app" /></label>
+        <label>Path <input id="monitor-path" value="/time" /></label>
+        <button id="monitor-call">Fetch</button>
+      </div>
+      <pre id="monitor-output" class="output">—</pre>
+    </section>
+  </main>
 
   <script src="renderer.js"></script>
 </body>
