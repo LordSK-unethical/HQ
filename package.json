@@ -1,0 +1,15 @@
+{
+  "name": "hq-time",
+  "version": "1.0.0",
+  "description": "Simple server time web service for Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
